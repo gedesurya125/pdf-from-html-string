@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  </head>
+  <body>
+    <button id="download-pdf">Generate the pdf</button>
+
+    <div id="content">
+      <h1 style="color: tomato">GeeksForGeeks</h1>
+
+      <h2>Founded by Sandeep Jain</h2>
+
+      <p>A Computer Science portal for geeks.</p>
+
+      <p>
+        It contains well written, well thought and well explained computer
+        science and programming articles.
+      </p>
+    </div>
+    <script>
+      document.getElementById("download-pdf").addEventListener("click", () => {
+        const htmlStringExample =
+          "<div id='content'><h1 style='color: tomato'>Hello World</h1><h2>its tested by surya</h2><p>Hello the world</p><p>Helooooooo ooo</p></div>";
+        const parsedHTMLElement = new DOMParser().parseFromString(
+          htmlStringExample,
+          "text/xml"
+        );
+
+        const element = document.getElementById("content");
+
+        console.log(
+          "this is the parsed html element",
+          parsedHTMLElement.firstChild
+        );
+        console.log("thi is the real element", element);
+        const options = {
+          filename: "GFG.pdf",
+          margin: 0,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: {
+            unit: "in",
+            format: "letter",
+            orientation: "portrait",
+          },
+        };
+
+        html2pdf()
+          .set(options)
+          .from(parsedHTMLElement.firstChild.innerHTML)
+          .save();
+      });
+    </script>
+  </body>
+</html>
