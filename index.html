@@ -9,51 +9,46 @@
   <body>
     <button id="download-pdf">Generate the pdf</button>
 
-    <div id="content">
-      <h1 style="color: tomato">GeeksForGeeks</h1>
+    <div id="link-container"></div>
 
-      <h2>Founded by Sandeep Jain</h2>
-
-      <p>A Computer Science portal for geeks.</p>
-
-      <p>
-        It contains well written, well thought and well explained computer
-        science and programming articles.
-      </p>
-    </div>
     <script>
-      document.getElementById("download-pdf").addEventListener("click", () => {
-        const htmlStringExample =
-          "<div id='content'><h1 style='color: tomato'>Hello World</h1><h2>its tested by surya</h2><p>Hello the world</p><p>Helooooooo ooo</p></div>";
-        const parsedHTMLElement = new DOMParser().parseFromString(
-          htmlStringExample,
-          "text/xml"
-        );
+      document
+        .getElementById("download-pdf")
+        .addEventListener("click", async () => {
+          // source https://stackoverflow.com/questions/3103962/converting-html-string-into-dom-elements
+          const htmlStringExample =
+            "<div id='content'><h1 style='color: tomato'>Hello World</h1><h2>its tested by surya</h2><p>Hello the world</p><p>Helooooooo ooo</p></div>";
+          const parsedHTMLElement = new DOMParser().parseFromString(
+            htmlStringExample,
+            "text/xml"
+          );
 
-        const element = document.getElementById("content");
+          // source https://www.geeksforgeeks.org/how-to-add-html-and-css-into-pdf-file/
+          const options = {
+            filename: "document.pdf",
+            margin: 0.2,
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: {
+              unit: "in",
+              format: "a4",
+              orientation: "portrait",
+            },
+          };
+          // source https://ekoopmans.github.io/html2pdf.js/
+          // source https://stackoverflow.com/questions/72510506/how-to-convert-a-file-object-to-a-url
+          const htmlFile = await html2pdf()
+            .set(options)
+            .from(parsedHTMLElement.firstChild.innerHTML)
+            .outputPdf("blob", "my-invoice.pdf");
 
-        console.log(
-          "this is the parsed html element",
-          parsedHTMLElement.firstChild
-        );
-        console.log("thi is the real element", element);
-        const options = {
-          filename: "GFG.pdf",
-          margin: 0,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: {
-            unit: "in",
-            format: "letter",
-            orientation: "portrait",
-          },
-        };
+          const href = await URL.createObjectURL(htmlFile);
 
-        html2pdf()
-          .set(options)
-          .from(parsedHTMLElement.firstChild.innerHTML)
-          .save();
-      });
+          // source https://www.w3schools.com/howto/howto_html_download_link.asp
+          document.getElementById("link-container").innerHTML = `
+          <a href="${href}" download="file.pdf">download</a>
+          `;
+        });
     </script>
   </body>
 </html>
