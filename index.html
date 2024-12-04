@@ -16,8 +16,21 @@
         .getElementById("download-pdf")
         .addEventListener("click", async () => {
           // source https://stackoverflow.com/questions/3103962/converting-html-string-into-dom-elements
-          const htmlStringExample =
-            "<div id='content'><h1 style='color: tomato'>Hello World</h1><h2>its tested by surya</h2><p>Hello the world</p><p>Helooooooo ooo</p></div>";
+          const htmlStringExample = `
+          <div>
+            <style>
+              #content {
+                background-color: blue;
+              }
+            </style>
+            <div id='content'>
+              <h1 style='color: tomato'>Hello World</h1>
+              <h2>its tested by surya</h2>
+              <p>Hello the world</p>
+              <p>Helooooooo ooo</p>
+            </div>
+          </div>
+          `;
           const parsedHTMLElement = new DOMParser().parseFromString(
             htmlStringExample,
             "text/xml"
@@ -26,7 +39,7 @@
           // source https://www.geeksforgeeks.org/how-to-add-html-and-css-into-pdf-file/
           const options = {
             filename: "document.pdf",
-            margin: 0.2,
+            margin: 0,
             image: { type: "jpeg", quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: {
